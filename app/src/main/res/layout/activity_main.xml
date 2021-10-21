@@ -52,6 +52,15 @@
         android:text="Turn Visible Mode on"
         android:minWidth="200dp"/>
 
+    /* Pair a new device */
+    <Button
+        android:id="@+id/pairDeviceBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:text="Pair A New Device"
+        android:minWidth="200dp"/>
+
     /* Get List of Paired Devices */
     <Button
         android:id="@+id/pairedBtn"
