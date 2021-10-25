@@ -12,10 +12,12 @@ import android.widget.Toast
 
 class MainActivity : AppCompatActivity() {
 
-    private val REQUEST_CODE_ENABLE_BT:Int = 1
-
     //bluetooth adapter
     lateinit var bluetoothAdapter:BluetoothAdapter
+
+    private val REQUEST_CODE_ENABLE_BT:Int = 1
+    private val REQUEST_CODE_DISCOVERABLE_BT:Int = 2
+
 
     fun checkIfBluetoothIsAvailableOrNot(){
 
@@ -74,7 +76,7 @@ class MainActivity : AppCompatActivity() {
             }
             else{
                 //turn on bluetooth
-                var intent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+                val intent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
                 startActivityForResult(intent, REQUEST_CODE_ENABLE_BT)
             }
         }
@@ -110,6 +112,39 @@ class MainActivity : AppCompatActivity() {
 
         visibleBtn.setOnClickListener(){
 
+            if(!bluetoothAdapter.isDiscovering){
+                Toast.makeText(this, "Making your device discoverable",Toast.LENGTH_LONG).show()
+                val intent = Intent(Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE))
+                startActivityForResult(intent, REQUEST_CODE_DISCOVERABLE_BT)
+            }
+
+        }
+
+    }
+
+    fun pairedDevices(){
+
+        //get list of paired devices
+        val pairedBtn = findViewById<Button>(R.id.pairedBtn)
+        val pairedTv = findViewById<TextView>(R.id.pairedTv)
+
+        pairedBtn.setOnClickListener(){
+            if(bluetoothAdapter.isEnabled){
+
+                pairedTv.text = "Paired Devices"
+
+                //get list of paired devices
+                val devices = bluetoothAdapter.bondedDevices
+
+                for(device in devices){
+                    val deviceName = device.name
+                    val deviceAddress = device
+                    pairedTv.append("\nDevice: $deviceName, $device")
+                }
+            }
+            else{
+                Toast.makeText(this, "Turn on bluetooth first",Toast.LENGTH_LONG).show()
+            }
         }
 
     }
@@ -136,6 +171,9 @@ class MainActivity : AppCompatActivity() {
         //Make Bluetooth Visible/Discoverable for other devices
         discovarable()
 
+        //get list of paired devices
+        pairedDevices()
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -144,7 +182,7 @@ class MainActivity : AppCompatActivity() {
             REQUEST_CODE_ENABLE_BT ->
                 if(resultCode == Activity.RESULT_OK){
                     bluetoothIv.setImageResource(R.drawable.ic_bluetooth_on)
-                    Toast.makeText(this, "Bluetooth is on",Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Bluetooth turned on",Toast.LENGTH_LONG).show()
                 } else{
                     Toast.makeText(this, "Could not turn on bluetooth",Toast.LENGTH_LONG).show()
                 }
