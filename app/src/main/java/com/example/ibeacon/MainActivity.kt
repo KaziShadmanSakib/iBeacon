@@ -5,13 +5,15 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.TextView
 
 class MainActivity : AppCompatActivity() {
 
+    //bluetooth adapter
+    lateinit var bluetoothAdapter:BluetoothAdapter
+
     fun checkIfBluetoothIsAvailableOrNot(){
-        //bluetooth adapter
-        lateinit var bluetoothAdapter:BluetoothAdapter
 
         val bluetoothStatusTv = findViewById<TextView>(R.id.bluetoothStatusTv)
 
@@ -30,6 +32,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun pairANewDeviceWindow(){
+
         val pairDeviceBtn = findViewById<Button>(R.id.pairDeviceBtn)
         //pair a new device button window
         pairDeviceBtn.setOnClickListener(){
@@ -41,7 +44,16 @@ class MainActivity : AppCompatActivity() {
     fun setImageAsBluetoothStatus(){
 
         //set image according to bluetooth status(on/off)
+        val bluetoothIv = findViewById<ImageView>(R.id.bluetoothIv)
+        if(bluetoothAdapter.isEnabled){
+            //bluetooth is on
+            bluetoothIv.setImageResource(R.drawable.ic_bluetooth_on)
+        }
 
+        else{
+            //bluetooth is off
+            bluetoothIv.setImageResource(R.drawable.ic_bluetooth_off)
+        }
 
 
     }
@@ -56,7 +68,8 @@ class MainActivity : AppCompatActivity() {
         //check if bluetooth is available or not
         checkIfBluetoothIsAvailableOrNot()
 
-
+        //set image according to bluetooth status(on/off)
+        setImageAsBluetoothStatus()
 
     }
 }
